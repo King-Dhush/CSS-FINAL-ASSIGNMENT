@@ -1,4 +1,4 @@
-//student A (Valerie)
+//student A : Valerie Soh Jia Qi 
 'use client';
 
 import { MapContainer, TileLayer, Marker, Popup, Tooltip } from 'react-leaflet';
