@@ -1,9 +1,10 @@
+// DHUSH //
 'use client';
 
 import React from 'react';
 import Image from 'next/image';
 import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css'; 
+import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 const dishes = [
@@ -40,18 +41,19 @@ const dishes = [
 ];
 
 export default function GalleryPage() {
-  // Slider settings
   const settings = {
-    dots: true, // Show navigation dots
-    infinite: true, // Infinite looping
-    speed: 500, // Transition speed in ms
-    slidesToShow: 1, // Number of slides to show at once
-    slidesToScroll: 1, // Number of slides to scroll on each action
-    autoplay: true, // Enable autoplay
-    autoplaySpeed: 1000, // 30 seconds
-    arrows: true, // Show next/prev arrows
-    pauseOnHover: true, // Pause autoplay on hover
-    adaptiveHeight: true, // Adjust slider height based on content
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 2000, // Adjusted autoplay speed
+    arrows: true,
+    pauseOnHover: true,
+    adaptiveHeight: true,
+    nextArrow: <SampleNextArrow />,
+    prevArrow: <SamplePrevArrow />,
   };
 
   return (
@@ -75,5 +77,35 @@ export default function GalleryPage() {
         </Slider>
       </div>
     </section>
+  );
+}
+
+function SampleNextArrow(props) {
+  const { className, style, onClick } = props;
+  return (
+    <div
+      className={className}
+      style={{ ...style, display: "block", background: "black", borderRadius: "5px", padding: "5px" }} // Added padding
+      onClick={onClick}
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="white" className="w-6 h-6">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+      </svg>
+    </div>
+  );
+}
+
+function SamplePrevArrow(props) {
+  const { className, style, onClick } = props;
+  return (
+    <div
+      className={className}
+      style={{ ...style, display: "block", background: "black", borderRadius: "5px", padding: "5px" }} // Added padding
+      onClick={onClick}
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="white" className="w-6 h-6">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+      </svg>
+    </div>
   );
 }
