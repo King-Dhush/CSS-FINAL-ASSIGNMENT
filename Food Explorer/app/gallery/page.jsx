@@ -1,4 +1,4 @@
-// DHUSH //
+//student C : Dhushyanth  S10270619C
 'use client';
 
 import React from 'react';
