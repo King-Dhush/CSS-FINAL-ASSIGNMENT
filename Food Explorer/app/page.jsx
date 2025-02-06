@@ -20,7 +20,7 @@ export default function Home() {
           textDecoration: 'underline',
         }}
       >
-        Click here to check out our code in GitHub
+        Click here to check out our code in GitHub!
       </a>
       </p>
     </section>
