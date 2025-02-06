@@ -48,7 +48,7 @@ export default function GalleryPage() {
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 2000, // Adjusted autoplay speed
+    autoplaySpeed: 1000, // Adjusted autoplay speed
     arrows: true,
     pauseOnHover: true,
     adaptiveHeight: true,
