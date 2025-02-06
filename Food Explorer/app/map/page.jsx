@@ -70,8 +70,8 @@ export default function MapPage() {
       />
 
       <MapContainer
-        center={[39.5, -98.35]} // Centered over the USA
-        zoom={2} // Adjusted zoom to include global locations
+        center={[39.5, -98.35]}
+        zoom={2}
         style={{ width: '100%', height: '400px' }}
       >
         <TileLayer
@@ -91,7 +91,6 @@ export default function MapPage() {
               />
             </Popup>
 
-            {/* Tooltip will show image when you hover over the marker */}
             <Tooltip direction="top" offset={[0, -20]} opacity={1}>
               <img
                 src={place.imageSrc}
