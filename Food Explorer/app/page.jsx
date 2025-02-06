@@ -3,6 +3,8 @@
 // Home component for Food Explorer
 // This component includes a custom animation for the GitHub link.
 // The animation was created by King Dhush to enhance the visual appeal of the link.
+// The rest is done by Valerie. 
+
 export default function Home() {
   return (
     <>
