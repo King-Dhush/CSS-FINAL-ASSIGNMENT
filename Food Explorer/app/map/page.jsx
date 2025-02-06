@@ -75,8 +75,8 @@ export default function MapPage() {
         style={{ width: '100%', height: '400px' }}
       >
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution='&copy; <a href="https://www.esri.com/">Esri</a>'
+        url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}"
         />
 
         {filteredPlaces.map((place) => (
