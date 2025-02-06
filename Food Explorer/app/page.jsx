@@ -49,7 +49,7 @@ export default function Home() {
 
         .github-link {
           color: #0070f3; /* Changed link color to a more appealing blue */
-          text-decoration: none; /* Removed underline */
+          text-decoration: none; 
           font-weight: bold; /* Made the text bold */
         }
 
