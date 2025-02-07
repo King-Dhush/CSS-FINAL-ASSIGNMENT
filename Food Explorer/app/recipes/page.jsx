@@ -112,11 +112,9 @@ const recipes = [
 
 // IngredientConverter component
 function IngredientConverter({ ingredients }) {
-  // Allowed conversion units
-  const allowedUnits = ['ounces', 'milliliters', 'tablespoons', 'teaspoons'];
-  
+  const [isConverterOpen, setIsConverterOpen] = useState(false);
 
-  // Conversion factors: all values are in milliliters
+  const allowedUnits = ['ounces', 'milliliters', 'tablespoons', 'teaspoons'];
   const unitToMl = {
     ounces: 29.5735,
     milliliters: 1,
@@ -124,23 +122,20 @@ function IngredientConverter({ ingredients }) {
     teaspoons: 4.92892,
   };
 
-  // Standardize units (e.g. convert "tbsp" to "tablespoons")
   const standardizeUnit = (unit) => {
     const lower = unit.toLowerCase();
     if (lower === 'tbsp') return 'tablespoons';
     return lower;
   };
 
-  // Filter the recipe’s ingredients to only include those with convertible units.
   const convertibleIngredients = ingredients
     .map((ing) => ({ ...ing, unit: standardizeUnit(ing.unit) }))
     .filter((ing) => allowedUnits.includes(ing.unit));
 
   if (convertibleIngredients.length === 0) {
-    return <p>No convertible ingredients available.</p>;
+    return null; // Don't show the converter if no convertible ingredients
   }
 
-  // Initialize state for selected ingredient, amount, and target conversion unit.
   const defaultIngredient = convertibleIngredients[0];
   const defaultTarget =
     allowedUnits.find((u) => u !== defaultIngredient.unit) || defaultIngredient.unit;
@@ -167,61 +162,72 @@ function IngredientConverter({ ingredients }) {
     setToUnit(e.target.value);
   };
 
-  // Conversion formula: convert the input amount from the original unit to milliliters,
-  // then convert milliliters to the target unit.
   const fromUnit = selectedIngredient.unit;
   const convertedAmount =
     amount && unitToMl[fromUnit] && unitToMl[toUnit]
       ? (parseFloat(amount) * unitToMl[fromUnit]) / unitToMl[toUnit]
       : 0;
 
-
-return (
-  <div className="converter">
-    <h4>Ingredient Converter</h4>
-    <div className="converter-inputs">
-      <label>
-        Select Ingredient:
-        <select value={selectedIngredient.name} onChange={handleIngredientChange}>
-          {convertibleIngredients.map((ing, index) => (
-            <option key={index} value={ing.name}>
-              {ing.name} ({ing.amount} {ing.unit})
-            </option>
-          ))}
-        </select>
-      </label>
-      <label>
-        Amount:
-        <input type="number" value={amount} onChange={handleAmountChange} />
-        <span>{fromUnit}</span>
-      </label>
-      <label>
-        Convert To:
-        <select value={toUnit} onChange={handleToUnitChange}>
-          {allowedUnits.map((unit, index) => (
-            <option key={index} value={unit}>
-              {unit}
-            </option>
-          ))}
-        </select>
-      </label>
+  return (
+    <div className="converter-container">
+      <div
+        className="converter-header"
+        onClick={() => setIsConverterOpen(!isConverterOpen)}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => e.key === 'Enter' && setIsConverterOpen(!isConverterOpen)}
+      >
+        <h4>Unit Converter</h4>
+        <span className={`toggle-icon ${isConverterOpen ? 'expanded' : ''}`}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+          </svg>
+        </span>
+      </div>
+      <div className={`converter-content ${isConverterOpen ? 'expanded' : ''}`}>
+        <div className="converter-inputs">
+          <label>
+            Ingredient:
+            <select value={selectedIngredient.name} onChange={handleIngredientChange}>
+              {convertibleIngredients.map((ing, index) => (
+                <option key={index} value={ing.name}>
+                  {ing.name} ({ing.amount} {ing.unit})
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            Amount:
+            <input type="number" value={amount} onChange={handleAmountChange} />
+            <span className="unit">{fromUnit}</span>
+          </label>
+          <label>
+            Convert to:
+            <select value={toUnit} onChange={handleToUnitChange}>
+              {allowedUnits.map((unit, index) => (
+                <option key={index} value={unit}>
+                  {unit}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+        <div className="converted-result">
+          <p>
+            <strong>Result:</strong> {convertedAmount.toFixed(2)} {toUnit}
+          </p>
+        </div>
+      </div>
     </div>
-    <div className="converted-result">
-      <p>
-        Converted: {convertedAmount.toFixed(2)} {toUnit}
-      </p>
-    </div>
-  </div>
-);
+  );
 }
 
-
 function RecipeCard({ recipe }) {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
 
   return (
     <div className="recipe-card">
-      <div 
+      <div
         className="recipe-header"
         onClick={() => setIsExpanded(!isExpanded)}
         role="button"
