@@ -1,29 +1,7 @@
-//student B : Aw Ming Jie S10266864B
 'use client';
 
+import { Fascinate } from 'next/font/google';
 import { useState } from 'react';
-
-// Function to convert units
-const convertUnits = (value, fromUnit, toUnit) => {
-  const conversionRates = {
-    gramsToOunces: 0.03527396,
-    ouncesToGrams: 28.3495,
-    cupsToMilliliters: 240,
-    millilitersToCups: 0.00416667,
-  };
-
-  if (fromUnit === 'grams' && toUnit === 'ounces') {
-    return value * conversionRates.gramsToOunces;
-  } else if (fromUnit === 'ounces' && toUnit === 'grams') {
-    return value * conversionRates.ouncesToGrams;
-  } else if (fromUnit === 'cups' && toUnit === 'milliliters') {
-    return value * conversionRates.cupsToMilliliters;
-  } else if (fromUnit === 'milliliters' && toUnit === 'cups') {
-    return value * conversionRates.millilitersToCups;
-  } else {
-    return value; // No conversion
-  }
-};
 
 // Recipes Data
 const recipes = [
@@ -45,7 +23,7 @@ const recipes = [
       'Beat eggs in a bowl and add grated Pecorino cheese.',
       'Drain pasta, keeping a little pasta water.',
       'Mix pasta with egg mixture and pancetta, adding pasta water to make a creamy sauce.',
-      'Season with salt and pepper to taste. Serve with extra cheese.'
+      'Season with salt and pepper to taste. Serve with extra cheese.',
     ],
   },
   {
@@ -67,7 +45,7 @@ const recipes = [
       'In a pan, melt butter and add garlic. Cook until fragrant.',
       'Add heavy cream and bring to a simmer. Stir in Parmesan cheese.',
       'Combine pasta and chicken with the sauce. Mix well.',
-      'Season with salt and pepper to taste.'
+      'Season with salt and pepper to taste.',
     ],
   },
   {
@@ -89,7 +67,7 @@ const recipes = [
       'Heat sesame oil in a pan and sauté garlic and ginger.',
       'Add vegetables and stir-fry for 5-7 minutes.',
       'Add tofu and soy sauce, stir and cook for another 3-5 minutes.',
-      'Serve over cooked rice.'
+      'Serve over cooked rice.',
     ],
   },
   {
@@ -108,7 +86,7 @@ const recipes = [
       'Cook ground beef until browned.',
       'Warm taco shells in the oven.',
       'Chop vegetables and assemble tacos by adding beef, cheese, lettuce, tomato, and onion.',
-      'Top with taco sauce and serve.'
+      'Top with taco sauce and serve.',
     ],
   },
   {
@@ -127,98 +105,174 @@ const recipes = [
       'Preheat grill to medium-high heat.',
       'Drizzle salmon fillets with olive oil and sprinkle with salt, pepper, and garlic.',
       'Grill salmon for 4-5 minutes per side.',
-      'Squeeze fresh lemon juice and top with chopped parsley before serving.'
+      'Squeeze fresh lemon juice and top with chopped parsley before serving.',
     ],
   },
 ];
 
-export default function RecipePage() {
-  const [amount, setAmount] = useState(1);
-  const [fromUnit, setFromUnit] = useState('grams');
-  const [toUnit, setToUnit] = useState('ounces');
-  const [convertedAmount, setConvertedAmount] = useState(0);
+// IngredientConverter component
+function IngredientConverter({ ingredients }) {
+  // Allowed conversion units
+  const allowedUnits = ['ounces', 'milliliters', 'tablespoons', 'teaspoons'];
+  
 
-  const handleAmountChange = (e) => {
-    const newAmount = e.target.value;
-    setAmount(newAmount);
-    setConvertedAmount(convertUnits(newAmount, fromUnit, toUnit));
+  // Conversion factors: all values are in milliliters
+  const unitToMl = {
+    ounces: 29.5735,
+    milliliters: 1,
+    tablespoons: 14.7868,
+    teaspoons: 4.92892,
   };
 
-  const handleFromUnitChange = (e) => {
-    const newFromUnit = e.target.value;
-    setFromUnit(newFromUnit);
-    setConvertedAmount(convertUnits(amount, newFromUnit, toUnit));
+  // Standardize units (e.g. convert "tbsp" to "tablespoons")
+  const standardizeUnit = (unit) => {
+    const lower = unit.toLowerCase();
+    if (lower === 'tbsp') return 'tablespoons';
+    return lower;
+  };
+
+  // Filter the recipe’s ingredients to only include those with convertible units.
+  const convertibleIngredients = ingredients
+    .map((ing) => ({ ...ing, unit: standardizeUnit(ing.unit) }))
+    .filter((ing) => allowedUnits.includes(ing.unit));
+
+  if (convertibleIngredients.length === 0) {
+    return <p>No convertible ingredients available.</p>;
+  }
+
+  // Initialize state for selected ingredient, amount, and target conversion unit.
+  const defaultIngredient = convertibleIngredients[0];
+  const defaultTarget =
+    allowedUnits.find((u) => u !== defaultIngredient.unit) || defaultIngredient.unit;
+  const [selectedIngredient, setSelectedIngredient] = useState(defaultIngredient);
+  const [amount, setAmount] = useState(defaultIngredient.amount);
+  const [toUnit, setToUnit] = useState(defaultTarget);
+
+  const handleIngredientChange = (e) => {
+    const ingName = e.target.value;
+    const ing = convertibleIngredients.find((i) => i.name === ingName);
+    if (ing) {
+      setSelectedIngredient(ing);
+      setAmount(ing.amount);
+      const newTarget = allowedUnits.find((u) => u !== ing.unit) || ing.unit;
+      setToUnit(newTarget);
+    }
+  };
+
+  const handleAmountChange = (e) => {
+    setAmount(e.target.value);
   };
 
   const handleToUnitChange = (e) => {
-    const newToUnit = e.target.value;
-    setToUnit(newToUnit);
-    setConvertedAmount(convertUnits(amount, fromUnit, newToUnit));
+    setToUnit(e.target.value);
   };
 
-  return (
-    <section style={{ textAlign: 'center', padding: '2rem', maxWidth: '1200px', margin: 'auto' }}>
-      <h1>Recipes</h1>
-      
-      {recipes.map((recipe) => (
-        <div key={recipe.id} style={{ marginBottom: '40px', padding: '20px', border: '1px solid #ccc', borderRadius: '8px' }}>
-          <h2 style={{ color: '#333', fontSize: '24px', marginBottom: '10px' }}>{recipe.name}</h2>
+  // Conversion formula: convert the input amount from the original unit to milliliters,
+  // then convert milliliters to the target unit.
+  const fromUnit = selectedIngredient.unit;
+  const convertedAmount =
+    amount && unitToMl[fromUnit] && unitToMl[toUnit]
+      ? (parseFloat(amount) * unitToMl[fromUnit]) / unitToMl[toUnit]
+      : 0;
 
-          <div style={{ textAlign: 'left', marginBottom: '20px' }}>
-            <h3>Ingredients:</h3>
-            <ul style={{ listStyleType: 'none', padding: '0' }}>
-              {recipe.ingredients.map((ingredient, index) => (
-                <li key={index} style={{ fontSize: '16px', marginBottom: '8px' }}>
-                  {ingredient.amount} {ingredient.unit} {ingredient.name}
+
+return (
+  <div className="converter">
+    <h4>Ingredient Converter</h4>
+    <div className="converter-inputs">
+      <label>
+        Select Ingredient:
+        <select value={selectedIngredient.name} onChange={handleIngredientChange}>
+          {convertibleIngredients.map((ing, index) => (
+            <option key={index} value={ing.name}>
+              {ing.name} ({ing.amount} {ing.unit})
+            </option>
+          ))}
+        </select>
+      </label>
+      <label>
+        Amount:
+        <input type="number" value={amount} onChange={handleAmountChange} />
+        <span>{fromUnit}</span>
+      </label>
+      <label>
+        Convert To:
+        <select value={toUnit} onChange={handleToUnitChange}>
+          {allowedUnits.map((unit, index) => (
+            <option key={index} value={unit}>
+              {unit}
+            </option>
+          ))}
+        </select>
+      </label>
+    </div>
+    <div className="converted-result">
+      <p>
+        Converted: {convertedAmount.toFixed(2)} {toUnit}
+      </p>
+    </div>
+  </div>
+);
+}
+
+
+function RecipeCard({ recipe }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  return (
+    <div className="recipe-card">
+      <div 
+        className="recipe-header"
+        onClick={() => setIsExpanded(!isExpanded)}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => e.key === 'Enter' && setIsExpanded(!isExpanded)}
+      >
+        <h2>{recipe.name}</h2>
+        <span className={`toggle-icon ${isExpanded ? 'expanded' : ''}`}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+          </svg>
+        </span>
+      </div>
+      <div className={`recipe-content ${isExpanded ? 'expanded' : ''}`}>
+        <div className="recipe-grid">
+          <div className="ingredients">
+            <h3>Ingredients</h3>
+            <ul>
+              {recipe.ingredients.map((ing, index) => (
+                <li key={index}>
+                  <span className="amount">{ing.amount}{ing.unit}</span>
+                  <span className="name">{ing.name}</span>
                 </li>
               ))}
             </ul>
           </div>
-
-          <div style={{ textAlign: 'left', marginBottom: '20px' }}>
-            <h3>Instructions:</h3>
-            <ol style={{ fontSize: '16px', paddingLeft: '20px' }}>
-              {recipe.instructions.map((instruction, index) => (
-                <li key={index} style={{ marginBottom: '8px' }}>
-                  {instruction}
-                </li>
+          <div className="instructions">
+            <h3>Instructions</h3>
+            <ol>
+              {recipe.instructions.map((inst, index) => (
+                <li key={index}>{inst}</li>
               ))}
             </ol>
           </div>
-
-          <div>
-            <h4>Unit Converter:</h4>
-            <label>
-              Amount:
-              <input type="number" value={amount} onChange={handleAmountChange} style={{ margin: '0 10px' }} />
-            </label>
-
-            <label>
-              From Unit:
-              <select value={fromUnit} onChange={handleFromUnitChange} style={{ margin: '0 10px' }}>
-                <option value="grams">Grams</option>
-                <option value="ounces">Ounces</option>
-                <option value="cups">Cups</option>
-                <option value="milliliters">Milliliters</option>
-              </select>
-            </label>
-
-            <span> to </span>
-
-            <label>
-              To Unit:
-              <select value={toUnit} onChange={handleToUnitChange} style={{ margin: '0 10px' }}>
-                <option value="grams">Grams</option>
-                <option value="ounces">Ounces</option>
-                <option value="cups">Cups</option>
-                <option value="milliliters">Milliliters</option>
-              </select>
-            </label>
-
-            <h4 style={{ marginTop: '10px' }}>Converted: {convertedAmount} {toUnit}</h4>
-          </div>
         </div>
-      ))}
+        <IngredientConverter ingredients={recipe.ingredients} />
+      </div>
+    </div>
+  );
+}
+
+export default function RecipePage() {
+  return (
+    <section className="recipe-page">
+      <h1>Delicious Recipes</h1>
+      <div className="recipe-list">
+        {recipes.map((recipe) => (
+          <RecipeCard key={recipe.id} recipe={recipe} />
+        ))}
+      </div>
     </section>
   );
 }
+
