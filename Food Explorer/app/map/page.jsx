@@ -139,7 +139,6 @@ export default function MapPage() {
           );
         })}
 
-        {/* Render food place markers */}
         {foodPlaces.map((place) => {
           const customIcon = new L.Icon({
             iconUrl: place.imageSrc, // Custom food image icon
