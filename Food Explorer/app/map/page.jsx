@@ -1,17 +1,9 @@
-//student A : Valerie Soh Jia Qi S10270376A
 'use client';
 
 import { MapContainer, TileLayer, Marker, Popup, Tooltip } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { useState } from 'react';
-
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: '/marker-icon-2x.png',
-  iconUrl: '/marker-icon.png',
-  shadowUrl: '/marker-shadow.png',
-});
 
 const foodPlaces = [
   { 
@@ -25,14 +17,14 @@ const foodPlaces = [
     id: 2, 
     name: 'Hokkien Mee', 
     position: [1.2870, 103.8530], //at Chomp Chomp Food Centre
-    info: 'A stir-fried noodle dish with prawns and pork, often served with sambal.',
+    info: 'A stir-fried noodle dish with prawns and pork.',
     imageSrc: '/HokkienMee.jpg'
   },
   { 
     id: 3, 
     name: 'Xiao Long Bao', 
     position: [1.2847, 103.8488], //at Din Tai Fung
-    info: 'A type of steamed dumpling filled with pork and a rich, flavorful soup.',
+    info: 'A type of steamed dumpling filled with pork and rich, flavorful soup.',
     imageSrc: '/XiaoLongBao.jpg'
   },
   { 
@@ -119,36 +111,45 @@ export default function MapPage() {
       />
 
       <MapContainer
-        center={[1.3521, 103.8198]} // Centered on Singapore
+        center={[1.290270, 103.851959]} // Default center on Singapore
         zoom={12}
-        style={{ width: '100%', height: '600px' }}
+        style={{ width: '100%', height: '400px' }}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {filteredPlaces.map((place) => (
-          <Marker key={place.id} position={place.position}>
-            <Popup>
-              <b>{place.name}</b>
-              <p>{place.info}</p>
-              <img 
-                src={place.imageSrc} 
-                alt={place.name} 
-                style={{ width: '100px', height: '100px', objectFit: 'cover', marginTop: '10px' }} 
-              />
-            </Popup>
+        {filteredPlaces.map((place) => {
+          const customIcon = new L.Icon({
+            iconUrl: place.imageSrc, // Custom food image icon
+            iconSize: [32, 32],
+            iconAnchor: [16, 32],
+            popupAnchor: [0, -32]
+          });
 
-            <Tooltip direction="top" offset={[0, -20]} opacity={1}>
-              <img
-                src={place.imageSrc}
-                alt={place.name}
-                style={{ width: '50px', height: '50px', objectFit: 'cover' }}
-              />
-            </Tooltip>
-          </Marker>
-        ))}
+          return (
+            <Marker key={place.id} position={place.position} icon={customIcon}>
+              <Popup>
+                <b>{place.name}</b>
+                <p>{place.info}</p>
+                <img 
+                  src={place.imageSrc} 
+                  alt={place.name} 
+                  style={{ width: '100px', height: '100px', objectFit: 'cover', marginTop: '10px' }} 
+                />
+              </Popup>
+
+              <Tooltip direction="top" offset={[0, -20]} opacity={1}>
+                <img
+                  src={place.imageSrc}
+                  alt={place.name}
+                  style={{ width: '50px', height: '50px', objectFit: 'cover' }}
+                />
+              </Tooltip>
+            </Marker>
+          );
+        })}
       </MapContainer>
     </section>
   );
