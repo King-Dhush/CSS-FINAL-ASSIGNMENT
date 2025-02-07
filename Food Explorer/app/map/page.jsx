@@ -1,4 +1,3 @@
-Student A : Valerie Soh Jia Qi S10270376A
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -139,6 +138,7 @@ export default function MapPage() {
           );
         })}
 
+        {/* Render food place markers */}
         {foodPlaces.map((place) => {
           const customIcon = new L.Icon({
             iconUrl: place.imageSrc, // Custom food image icon
