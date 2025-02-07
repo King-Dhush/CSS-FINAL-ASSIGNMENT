@@ -2,7 +2,7 @@
 
 // Home component for Food Explorer
 // This component includes a custom animation for the GitHub link.
-// The animation was created by King Dhush to enhance the visual appeal of the link.
+// The animation was proposed and created by King Dhush to enhance the visual appeal of the link.
 // The rest of the code is done by Valerie.
 
 export default function Home() {
@@ -14,18 +14,17 @@ export default function Home() {
           Explore our interactive map of food places, 
           <br />find recipes with built-in unit calculators, 
           <br />and browse a gallery of world cuisines in our custom carousel.
-          <br />
-          <div className="github-link-box">
-            <a 
-              href="https://github.com/King-Dhush/CSS-FINAL-ASSIGNMENT" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="github-link"
-            >
-              Click here to check out our code in GitHub!
-            </a>
-          </div>
         </p>
+        <div className="github-link-box">
+          <a 
+            href="https://github.com/King-Dhush/CSS-FINAL-ASSIGNMENT" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="github-link"
+          >
+            Click here to check out our code in GitHub!
+          </a>
+        </div>
       </section>
       <style jsx>{`
         /* Custom animation for the GitHub link created by King Dhush */
