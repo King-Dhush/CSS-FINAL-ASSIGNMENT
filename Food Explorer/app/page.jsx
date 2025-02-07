@@ -33,33 +33,32 @@ export default function Home() {
           position: absolute;
           bottom: 60px;
           left: 60px;
-          width: 300px; /* Made the box longer */
-          height: 60px; /* Adjusted height for better design */
+          width: 300px; 
+          height: 60px; 
           display: flex;
           align-items: center;
           justify-content: center;
           background-color: #f0f0f0; /* Light gray background for better contrast */
-          border: 2px solid #0070f3; /* Changed border color to match the link color */
-          border-radius: 8px; /* Added border radius for a smoother look */
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Added subtle shadow for depth */
+          border: 2px solid #0070f3;
+          border-radius: 8px;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
           cursor: pointer;
           /* Animation: smoothly move up and down */
           animation: moveUpDown 2s ease-in-out infinite;
         }
 
         .github-link {
-          color: #0070f3; /* Changed link color to a more appealing blue */
+          color: #0070f3;
           text-decoration: none; 
-          font-weight: bold; /* Made the text bold */
+          font-weight: bold;
         }
 
-        /* Keyframes for the custom move up and down animation */
         @keyframes moveUpDown {
           0% {
             transform: translateY(0);
           }
           50% {
-            transform: translateY(-10px); /* Moves the element up by 10px */
+            transform: translateY(-10px);
           }
           100% {
             transform: translateY(0);
