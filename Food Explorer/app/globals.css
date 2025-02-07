@@ -2,7 +2,7 @@ html, body {
   margin: 0;
   padding: 0;
   font-family: Inter, sans-serif;
-  background-image: url('/foodexplorer.png'); /* Correct path to image in public folder */
+  background-image: url('/foodexplorer.png');
   background-size: cover;
   background-position: center center;
   height: 100vh;
@@ -100,7 +100,7 @@ h1 {
 }
 
 .recipe-content.expanded {
-  max-height: 2000px; /* Adjust based on your content needs */
+  max-height: 2000px;
   opacity: 1;
   padding: 1.25rem;
 }
@@ -201,7 +201,7 @@ h1 {
 }
 
 .converter-content.expanded {
-  max-height: 300px; /* Adjust based on content */
+  max-height: 300px;
   opacity: 1;
   padding: 1rem;
 }
