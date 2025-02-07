@@ -120,7 +120,7 @@ export default function MapPage() {
 
       <MapContainer
         center={[1.3521, 103.8198]} // Centered on Singapore
-        zoom={12} // Adjusted zoom to focus on Singapore
+        zoom={12}
         style={{ width: '100%', height: '600px' }}
       >
         <TileLayer
