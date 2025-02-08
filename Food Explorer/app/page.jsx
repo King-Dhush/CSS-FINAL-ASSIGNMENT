@@ -1,9 +1,9 @@
 "use client";
 
-// Home component for Food Explorer
+// Home page component for Food Explorer
 // This component includes a custom animation for the GitHub link.
 // The animation was proposed and created by King Dhush to enhance the visual appeal of the link.
-// The rest of the code is done by Valerie.
+// The homepage was made with the collaboration of all team members.
 
 export default function Home() {
   return (
