@@ -47,7 +47,7 @@
       },
       {
         id: 3,
-        name: 'Hokkian Mee',
+        name: 'Hokkien Mee',
         category: 'Chinese',
         ingredients: [
           { name: 'Egg Noodles', amount: 200, unit: 'grams' },
@@ -87,7 +87,7 @@
       // Indian Cuisine
       {
         id: 5,
-        name: 'Chicken Biryani',
+        name: 'Chicken Briyani',
         category: 'Indian',
         ingredients: [
           { name: 'Basmati Rice', amount: 2, unit: 'cups' },
