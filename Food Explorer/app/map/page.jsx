@@ -95,7 +95,8 @@ const foodPlaces = [
 
 export default function MapPage() {
   const [hawkerCentres, setHawkerCentres] = useState([]);
-  
+  const [searchQuery, setSearchQuery] = useState('');
+
   useEffect(() => {
     const loadHawkerCentres = async () => {
       const response = await fetch('/HawkerCentresGEOJSON.geojson');
@@ -105,17 +106,21 @@ export default function MapPage() {
     
     loadHawkerCentres();
   }, []);
-  
-  const filteredHawkerCentres = hawkerCentres.filter(hawkerCentre => {
-    return foodPlaces.some(foodPlace => {
-      const hawkerCentreName = hawkerCentre.properties?.name || '';
-      return hawkerCentreName.toLowerCase().includes(foodPlace.name.toLowerCase());
-    });
-  });  
+
+  const filteredFoodPlaces = foodPlaces.filter((place) =>
+    place.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <section>
       <h1>Interactive Food Map</h1>
+      <input
+        type="text"
+        placeholder="Search food places..."
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        style={{ marginBottom: '1rem' }}
+      />
       <MapContainer
         center={[1.290270, 103.851959]} // Default center on Singapore
         zoom={12}
@@ -125,24 +130,9 @@ export default function MapPage() {
           attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        
-        {filteredHawkerCentres.map(hawkerCentre => {
-          const position = [hawkerCentre.geometry.coordinates[1], hawkerCentre.geometry.coordinates[0]];
-          
-          return (
-            <Marker key={hawkerCentre.properties.id} position={position}>
-              <Popup>
-                <b>{hawkerCentre.properties.name}</b>
-                <p>{hawkerCentre.properties.description}</p>
-              </Popup>
-            </Marker>
-          );
-        })}
-
-        {/* Render food place markers */}
-        {foodPlaces.map((place) => {
+        {filteredFoodPlaces.map((place) => {
           const customIcon = new L.Icon({
-            iconUrl: place.imageSrc, // Custom food image icon
+            iconUrl: place.imageSrc,
             iconSize: [32, 32],
             iconAnchor: [16, 32],
             popupAnchor: [0, -32]
@@ -159,7 +149,6 @@ export default function MapPage() {
                   style={{ width: '100px', height: '100px', objectFit: 'cover', marginTop: '10px' }} 
                 />
               </Popup>
-
               <Tooltip direction="top" offset={[0, -20]} opacity={1}>
                 <img
                   src={place.imageSrc}
